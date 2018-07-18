@@ -16,8 +16,12 @@
  */
 package org.superbiz.moviefun.movies;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,32 +33,61 @@ import java.util.List;
 @Repository
 public class MoviesBean {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "movies-unit")
+    @Qualifier("moviesEntityManager")
     private EntityManager entityManager;
+
+    private final TransactionTemplate transactionTemplate;
+
+    public MoviesBean(@Qualifier("transactionManagerMovies") PlatformTransactionManager transactionManager){
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
+    }
 
     public Movie find(Long id) {
         return entityManager.find(Movie.class, id);
     }
 
-    @Transactional
+
     public void addMovie(Movie movie) {
-        entityManager.persist(movie);
+
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                entityManager.persist(movie);
+            }
+        });
+
     }
 
-    @Transactional
+
     public void editMovie(Movie movie) {
-        entityManager.merge(movie);
+
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                entityManager.merge(movie);
+            }
+        });
+
+
     }
 
-    @Transactional
+
     public void deleteMovie(Movie movie) {
-        entityManager.remove(movie);
+
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                entityManager.remove(movie);
+            }
+        });
     }
 
-    @Transactional
+
     public void deleteMovieId(long id) {
-        Movie movie = entityManager.find(Movie.class, id);
-        deleteMovie(movie);
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                Movie movie = entityManager.find(Movie.class, id);
+                entityManager.remove(movie);
+            }
+        });
     }
 
     public List<Movie> getMovies() {
