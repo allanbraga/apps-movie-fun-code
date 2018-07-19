@@ -1,17 +1,16 @@
 package org.superbiz.moviefun;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.superbiz.moviefun.movies.Movie;
+import org.superbiz.moviefun.movies.MoviesBean;
 
 @Controller
 public class HomeController {
 
     private MoviesBean moviesBean;
 
-//    @Autowired
     public HomeController(MoviesBean moviesBean){
 
         this.moviesBean = moviesBean;
