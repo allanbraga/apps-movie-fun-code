@@ -42,7 +42,7 @@ public class MoviesBean {
 
     @Transactional
     public void addMovie(Movie movie) {
-        logger.debug(String.format("Creating movie with title %s , and year %s ",movie.getTitle(),movie.getYear()));
+        logger.debug("Creating movie with title {} , and year {} ",movie.getTitle(),movie.getYear());
         entityManager.persist(movie);
     }
 

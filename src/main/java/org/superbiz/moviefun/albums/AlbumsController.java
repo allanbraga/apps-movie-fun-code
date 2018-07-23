@@ -50,7 +50,7 @@ public class AlbumsController {
 
     @PostMapping("/{albumId}/cover")
     public String uploadCover(@PathVariable Long albumId, @RequestParam("file") MultipartFile uploadedFile) {
-        logger.info("Uploading cover for album with id " + albumId);
+        logger.info("Uploading cover for album with id {}",albumId);
 
         if (uploadedFile.getSize() > 0) {
             try {
