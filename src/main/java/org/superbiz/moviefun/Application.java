@@ -34,9 +34,9 @@ public class Application {
         ServiceCredentials serviceCredentials,
         @Value("${vcap.services.photo-storage.credentials.endpoint:#{null}}") String endpoint
     ) {
-        String photoStorageAccessKeyId = serviceCredentials.getCredential("photo-storage", "user-provided", "access_key_id");
-        String photoStorageSecretKey = serviceCredentials.getCredential("photo-storage", "user-provided", "secret_access_key");
-        String photoStorageBucket = serviceCredentials.getCredential("photo-storage", "user-provided", "bucket");
+        String photoStorageAccessKeyId = serviceCredentials.getCredential("photo-storage-tmp", "user-provided", "access_key_id");
+        String photoStorageSecretKey = serviceCredentials.getCredential("photo-storage-tmp", "user-provided", "secret_access_key");
+        String photoStorageBucket = serviceCredentials.getCredential("photo-storage-tmp", "user-provided", "bucket");
 
         AWSCredentials credentials = new BasicAWSCredentials(photoStorageAccessKeyId, photoStorageSecretKey);
         AmazonS3Client s3Client = new AmazonS3Client(credentials);
